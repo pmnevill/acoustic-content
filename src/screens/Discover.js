@@ -90,6 +90,7 @@ function Discover() {
               css={{
                 width: `100%`,
                 marginTop: "30px",
+                padding: 0,
               }}
             >
               <Row>
