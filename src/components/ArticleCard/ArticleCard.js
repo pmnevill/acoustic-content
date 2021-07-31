@@ -57,11 +57,25 @@ function ArticleCard({
               overflow: "auto",
               position: "absolute",
               width: "100%",
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between'
             }}
           >
-            <h4>{heading || "DEFAULT HEADING"}</h4>
-            <h6>{author || "DEFAULT AUTHOR"}</h6>
-            <span>{formattedDate || "DATE"}</span>
+            <h4 css={{
+              whiteSpace: 'nowrap',
+              textOverflow: 'ellipsis',
+              overflow: 'hidden'
+            }}>{heading || "DEFAULT HEADING"}</h4>
+            <div css={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center'
+            }}>
+              <strong>{author || "DEFAULT AUTHOR"}</strong>
+              <small>{formattedDate || "DATE"}</small>
+            </div>
           </div>
         </div>
       </ClickableTile>

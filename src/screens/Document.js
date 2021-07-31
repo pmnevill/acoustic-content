@@ -77,11 +77,7 @@ function DocumentScreen() {
             textAlign: "center",
           }}
         >
-          <h1
-            css={{
-              fontSize: "50px",
-            }}
-          >
+          <h1>
             {headingValue}
           </h1>
           <h3
@@ -93,11 +89,21 @@ function DocumentScreen() {
             {authorValue}
           </h3>
         </div>
+        <div css={{
+          padding: '20px',
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+          <FaCalendar css={{marginRight: '10px'}}/><span css={{fontStyle: 'italic'}}>Published: {formattedDate}</span>
+        </div>
         <ArticleImage
           crop="100"
           rendition={leadImage}
           css={{
-            height: "60vh",
+            height: "50vh",
+            marginBottom: '50px',
           }}
           documentLoading={isLoading}
         />
@@ -106,15 +112,19 @@ function DocumentScreen() {
             display: "flex",
             flexDirection: "row",
             alignItems: 'center',
+            marginBottom: '50px',
+            justifyContent: 'center',
           }}
         >
           {authorBioValue ? (
+            <div css={{
+                margin: '10px',
+              }}>
             <ArticleImage
               css={{
                 borderRadius: '50px',
-                margin: '20px',
-                width: "100px",
-                height: "100px",
+                width: "80px",
+                height: "80px",
               }}
               crop="100"
               rendition={
@@ -122,6 +132,7 @@ function DocumentScreen() {
               }
               documentLoading={isLoading || authorBioIsLoading}
             />
+            </div>
           ) : null}
           <div css={{maxWidth: '500px'}}>
             <h4>{authorValue}</h4>
@@ -131,32 +142,34 @@ function DocumentScreen() {
             }`} dangerouslySetInnerHTML={{ __html: authorBioData?.elements?.shortBio?.value }}></div>
           </div>
         </div>
-        <div css={{
-          padding: '20px',
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center'
+        <article css={{
+          marginBottom: '200px',
+          maxWidth: '1000px',
+          margin: 'auto',
         }}>
-          <FaCalendar css={{marginRight: '10px'}}/><span css={{fontStyle: 'italic'}}>Published: {formattedDate}</span>
-        </div>
-        <div>
           {body?.values ? (
             body?.values.map((value, index) => (
-              <div key={index} dangerouslySetInnerHTML={{ __html: value }}></div>
+              <div css={{
+                textIndent: '30px',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+              }} key={index}>
+                <div dangerouslySetInnerHTML={{ __html: value }}></div>
+                <div css={{
+                  width: '80%',
+                  margin: '50px',
+                  height: '10px',
+                  backgroundColor: 'rgba(0,0,0,0.05)',
+                  borderRadius: '5px',
+                }}></div>
+              </div>
             ))
           ) : (
             <p>Missing Content</p>
           )}
-        </div>
+        </article>
       </div>
-      {/* <ArticleCard
-        articleId={document?.id}
-        heading={document?.elements?.heading?.value}
-        author={document?.elements?.author?.value}
-        date={document?.elements?.date?.value}
-        image={document?.elements?.mainImage?.value?.leadImage}
-        body={document?.elements?.body}
-      /> */}
     </ErrorBoundary>
   );
 }

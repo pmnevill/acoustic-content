@@ -6,6 +6,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import { Discover } from "./screens/Discover";
 import { DocumentScreen } from "./screens/Document";
 import { FullPageErrorFallback, ErrorFallback } from "./components/lib";
+import { Footer } from "./components/Footer/Footer";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           </Switch>
         </ErrorBoundary>
       </Content>
+      <Footer/>
     </ErrorBoundary>
   );
 }
