@@ -12,29 +12,39 @@ import {
   Column,
   Row,
   SkeletonPlaceholder,
+  Loading,
 } from "carbon-components-react";
 import { useDocumentSearch } from "../utils/documents";
 import { ArticleCard } from "../components/ArticleCard/ArticleCard";
 import { ErrorBoundary } from "react-error-boundary";
 import { ErrorFallback } from "../components/lib";
+import debounceFn from 'debounce-fn'
 
 function Discover() {
   const initialQuery = {
     text: "",
     type: "Design article",
   };
-  const [query, setQuery] = React.useState(initialQuery);
-  const [, setQueried] = React.useState(false);
+  const [text, setText] = React.useState("");
+  const [type, setType] = React.useState("Design article");
+  const [query, setQuery] = React.useState({text, type});
   const { documents, isLoading, isSuccess } = useDocumentSearch(query);
 
-  function handleSearchSubmit(event) {
-    event.preventDefault();
-    setQueried(true);
-    setQuery({
-      text: event.target.elements["text"].value,
-      type: event.target.elements["select"].value,
-    });
+  const debouncedSearch = React.useMemo(() => debounceFn(setQuery, {wait: 500}), [
+    setQuery,
+  ])
+
+  function handleTypeChange(event) {
+    setType(event.target.value);
   }
+
+  function handleTextChange(event) {
+    setText(event.target.value);
+  }
+
+  React.useEffect(() => {
+    debouncedSearch({text, type})
+  }, [debouncedSearch, text, type])
 
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
@@ -44,7 +54,7 @@ function Discover() {
           flexDirection: "column",
         }}
       >
-        <Form onSubmit={handleSearchSubmit}>
+        <Form onSubmit={event => event.preventDefault()}>
           <FormGroup
             legendText="Search"
             css={{
@@ -56,7 +66,6 @@ function Discover() {
               id="select"
               noLabel
               defaultValue={query.type}
-              disabled={isLoading}
               size="xl"
               css={{
                 width: "200px",
@@ -64,6 +73,7 @@ function Discover() {
                 borderRightStyle: "solid",
                 borderRightWidth: "1px",
               }}
+              onChange={handleTypeChange}
             >
               <SelectItem value="Design article" text="Design Articles" />
               <SelectItem value="Article" text="Articles" />
@@ -72,18 +82,17 @@ function Discover() {
               id="text"
               labelText="Search"
               defaultValue={initialQuery.text}
-              disabled={isLoading}
+              onChange={handleTextChange}
             />
           </FormGroup>
-          <div css={{ display: "flex" }}>
-            {isLoading ? (
-              <InlineLoading description="Searching..." />
-            ) : (
-              <Button type="submit">Submit</Button>
-            )}
-          </div>
         </Form>
-        {isSuccess ? (
+        {isLoading && <div css={{
+          display: 'flex',
+          justifyContent: 'center',
+        }}>
+          <Loading withOverlay={false}/>
+        </div>}
+        {!isLoading && isSuccess ? (
           documents.length ? (
             <Grid
               fullWidth

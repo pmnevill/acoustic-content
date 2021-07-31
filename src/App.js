@@ -16,16 +16,20 @@ function App() {
         <ErrorBoundary FallbackComponent={ErrorFallback}>
           <Switch>
             <Route exact path="/discover">
-              <Discover />
+              <ErrorBoundary FallbackComponent={ErrorFallback}>
+                <Discover />
+              </ErrorBoundary>
             </Route>
             <Route path="/document/:documentId">
-              <DocumentScreen />
+              <ErrorBoundary FallbackComponent={ErrorFallback}>
+                <DocumentScreen />
+              </ErrorBoundary>
             </Route>
             <Redirect to="/discover" />
           </Switch>
         </ErrorBoundary>
       </Content>
-      <Footer/>
+      <Footer />
     </ErrorBoundary>
   );
 }
