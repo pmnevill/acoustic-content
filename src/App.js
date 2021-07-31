@@ -1,5 +1,5 @@
 import "./App.scss";
-import { Content, Header } from "carbon-components-react";
+import { Content } from "carbon-components-react";
 import { MainHeader } from "./components/MainHeader/MainHeader";
 import { Switch, Route, Redirect } from "react-router-dom";
 import { ErrorBoundary } from "react-error-boundary";
