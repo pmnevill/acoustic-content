@@ -150,10 +150,12 @@ function DocumentScreen() {
           {body?.values ? (
             body?.values.map((value, index) => (
               <div css={{
-                textIndent: '30px',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
+                p: {
+                  textIndent: '30px',
+                }
               }} key={index}>
                 <div dangerouslySetInnerHTML={{ __html: value }}></div>
                 <div css={{
