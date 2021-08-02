@@ -6,56 +6,30 @@ import { useDocument } from "../utils/documents";
 import { ErrorBoundary } from "react-error-boundary";
 import { ErrorFallback } from "../components/lib";
 import { ArticleImage } from "../components/ArticleCard/ArticleImage";
-import { useAsync } from "../utils/hooks";
-import { getContentById } from "../utils/api";
 import moment from "moment";
 import {FaCalendar} from 'react-icons/fa'
 import { useHistory } from "react-router-dom";
 
 function DocumentScreen() {
   const { documentId } = useParams();
-  const { document, isLoading, isSuccess, error } = useDocument(documentId);
+  const history = useHistory();
+  const { document, isLoading, error } = useDocument(documentId);
+
+  const leadImage = document?.elements?.mainImage?.value?.leadImage || null;
+  const headingValue = document?.elements?.heading?.value || null;
+  const authorValue = document?.elements?.author?.value || null;
+  const authorBioValue = document?.elements?.authorBio?.value || null;
+  const dateValue = document?.elements?.date?.value || null;
+  const body = document?.elements?.body || null;
+
   const {
     data: authorBioData,
     isLoading: authorBioIsLoading,
-    run: getAuthorBio,
-  } = useAsync();
-  const history = useHistory();
-
-  const {
-    elements: {
-      mainImage: {
-        value: { leadImage } = {
-          leadImage: null,
-        },
-      } = {
-        mainImage: {},
-      },
-      heading: { value: headingValue } = {
-        value: null,
-      },
-      author: { value: authorValue } = {
-        value: null,
-      },
-      authorBio: { value: authorBioValue } = {
-        value: {},
-      },
-      date: { value: dateValue } = {
-        value: {},
-      },
-      body,
-    } = {
-      elements: {},
-    },
-  } = document;
+  } = useDocument(document?.elements?.authorBio?.value?.id, {
+    enabled: !!document,
+  }, 'authorBio');
 
   const formattedDate = moment(dateValue).format("MMMM Do YYYY");
-
-  React.useEffect(() => {
-    if (isSuccess && authorBioValue && authorBioValue.id) {
-      getAuthorBio(getContentById(authorBioValue.id));
-    }
-  }, [authorBioValue, document, getAuthorBio, isSuccess]);
 
   React.useEffect(() => {
     if (error) {

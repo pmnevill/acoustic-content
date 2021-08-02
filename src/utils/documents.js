@@ -1,16 +1,6 @@
 import { useQuery, queryCache } from "react-query";
 import { searchDocument, getContentById } from "./api";
 
-const loadingDocument = {
-};
-
-const loadingDocuments = Array.from({ length: 10 }, (v, index) => ({
-  document: {
-    id: `loading-document-${index}`,
-    ...loadingDocument,
-  },
-}));
-
 const getDocumentSearchConfig = ({ text, type }) => ({
   queryKey: ["contentSearch", { text, type }],
   queryFn: () =>
@@ -27,17 +17,18 @@ const getDocumentSearchConfig = ({ text, type }) => ({
   },
 });
 
-function useDocument(documentId) {
+function useDocument(documentId, config = {}) {
   const result = useQuery({
     queryKey: ['document', {id: documentId}],
     queryFn: () => getContentById(documentId),
+    ...config,
   })
-  return {...result, document: result.data ?? loadingDocument}
+  return {...result, document: result.data}
 }
 
 function useDocumentSearch({ text, type }) {
   const result = useQuery(getDocumentSearchConfig({ text, type }));
-  return { ...result, documents: result.data ?? loadingDocuments };
+  return { ...result, documents: result.data };
 }
 
 const documentQueryConfig = {
