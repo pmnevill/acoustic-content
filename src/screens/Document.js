@@ -8,6 +8,7 @@ import { ErrorFallback } from "../components/lib";
 import { ArticleImage } from "../components/ArticleCard/ArticleImage";
 import moment from "moment";
 import { FaCalendar } from "react-icons/fa";
+import { SkeletonText } from "carbon-components-react";
 
 function DocumentScreen() {
   const { documentId } = useParams();
@@ -48,30 +49,62 @@ function DocumentScreen() {
         <div
           css={{
             margin: "30px",
-            textAlign: "center",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
           }}
         >
-          <h1>{headingValue}</h1>
-          <h3
+          {isLoading ? (
+            <SkeletonText
+              heading={true}
+              css={{
+                height: "50px",
+                width: "50% !important",
+              }}
+            />
+          ) : (
+            <h1>{headingValue}</h1>
+          )}
+          {isLoading ? (
+            <SkeletonText
+              css={{
+                height: "36px",
+                width: "30% !important",
+              }}
+            />
+          ) : (
+            <h3
+              css={{
+                fontStyle: "italic",
+                fontWeight: "lighter",
+              }}
+            >
+              {authorValue}
+            </h3>
+          )}
+          <div
             css={{
-              fontStyle: "italic",
-              fontWeight: "lighter",
+              padding: "20px",
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "center",
+              width: "30% !important",
             }}
           >
-            {authorValue}
-          </h3>
-        </div>
-        <div
-          css={{
-            padding: "20px",
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <FaCalendar css={{ marginRight: "10px" }} />
-          <span css={{ fontStyle: "italic" }}>Published: {formattedDate}</span>
+            {isLoading ? (
+              <>
+                <SkeletonText />
+              </>
+            ) : (
+              <>
+                <FaCalendar css={{ marginRight: "10px" }} />
+                <span css={{ fontStyle: "italic" }}>
+                  Published: {formattedDate}
+                </span>
+              </>
+            )}
+          </div>
         </div>
         <ArticleImage
           crop="100"
