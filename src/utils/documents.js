@@ -19,11 +19,11 @@ const getDocumentSearchConfig = ({ text, type }) => ({
 
 function useDocument(documentId, config = {}) {
   const result = useQuery({
-    queryKey: ['document', {id: documentId}],
+    queryKey: ["document", { id: documentId }],
     queryFn: () => getContentById(documentId),
     ...config,
-  })
-  return {...result, document: result.data}
+  });
+  return { ...result, document: result.data };
 }
 
 function useDocumentSearch({ text, type }) {

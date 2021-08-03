@@ -23,9 +23,11 @@ function MainHeader() {
           aria-label="GitHub Repo"
           onClick={() => goTo("https://github.com/pmnevill/acoustic-content")}
         >
-          <FaGithub css={{
-            fontSize: '30px',
-          }} />
+          <FaGithub
+            css={{
+              fontSize: "30px",
+            }}
+          />
         </HeaderGlobalAction>
       </HeaderGlobalBar>
     </Header>

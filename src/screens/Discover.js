@@ -16,7 +16,7 @@ import { useDocumentSearch } from "../utils/documents";
 import { ArticleCard } from "../components/ArticleCard/ArticleCard";
 import { ErrorBoundary } from "react-error-boundary";
 import { ErrorFallback } from "../components/lib";
-import debounceFn from 'debounce-fn'
+import debounceFn from "debounce-fn";
 
 function Discover() {
   const initialQuery = {
@@ -25,12 +25,13 @@ function Discover() {
   };
   const [text, setText] = React.useState("");
   const [type, setType] = React.useState("Design article");
-  const [query, setQuery] = React.useState({text, type});
+  const [query, setQuery] = React.useState({ text, type });
   const { documents, isLoading, isSuccess } = useDocumentSearch(query);
 
-  const debouncedSearch = React.useMemo(() => debounceFn(setQuery, {wait: 500}), [
-    setQuery,
-  ])
+  const debouncedSearch = React.useMemo(
+    () => debounceFn(setQuery, { wait: 500 }),
+    [setQuery]
+  );
 
   function handleTypeChange(event) {
     setType(event.target.value);
@@ -41,8 +42,8 @@ function Discover() {
   }
 
   React.useEffect(() => {
-    debouncedSearch({text, type})
-  }, [debouncedSearch, text, type])
+    debouncedSearch({ text, type });
+  }, [debouncedSearch, text, type]);
 
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
@@ -52,7 +53,7 @@ function Discover() {
           flexDirection: "column",
         }}
       >
-        <Form onSubmit={event => event.preventDefault()}>
+        <Form onSubmit={(event) => event.preventDefault()}>
           <FormGroup
             legendText="Search"
             css={{
@@ -84,12 +85,16 @@ function Discover() {
             />
           </FormGroup>
         </Form>
-        {isLoading && <div css={{
-          display: 'flex',
-          justifyContent: 'center',
-        }}>
-          <Loading withOverlay={false}/>
-        </div>}
+        {isLoading && (
+          <div
+            css={{
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <Loading withOverlay={false} />
+          </div>
+        )}
         {!isLoading && isSuccess ? (
           documents.length ? (
             <Grid

@@ -16,9 +16,9 @@ function ArticleCard({
   const formattedDate = moment(date).format("MMMM Do YYYY");
   const history = useHistory();
 
-  const handleTileClick = event => {
-    history.push(`/document/${articleId}`)
-  }
+  const handleTileClick = (event) => {
+    history.push(`/document/${articleId}`);
+  };
 
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
@@ -57,22 +57,28 @@ function ArticleCard({
               overflow: "auto",
               position: "absolute",
               width: "100%",
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between'
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
             }}
           >
-            <h4 css={{
-              whiteSpace: 'nowrap',
-              textOverflow: 'ellipsis',
-              overflow: 'hidden'
-            }}>{heading || "DEFAULT HEADING"}</h4>
-            <div css={{
-              display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center'
-            }}>
+            <h4
+              css={{
+                whiteSpace: "nowrap",
+                textOverflow: "ellipsis",
+                overflow: "hidden",
+              }}
+            >
+              {heading || "DEFAULT HEADING"}
+            </h4>
+            <div
+              css={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
               <strong>{author || "DEFAULT AUTHOR"}</strong>
               <small>{formattedDate || "DATE"}</small>
             </div>

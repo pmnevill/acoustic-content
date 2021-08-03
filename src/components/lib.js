@@ -1,70 +1,66 @@
 /** @jsxImportSource @emotion/react */
-import * as colors from '../styles/colors'
+import * as colors from "../styles/colors";
 
 const errorMessageVariants = {
-  stacked: {display: 'block'},
-  inline: {display: 'inline-block'},
-}
+  stacked: { display: "block" },
+  inline: { display: "inline-block" },
+};
 
-function ErrorMessage({error, variant = 'stacked', ...props}) {
+function ErrorMessage({ error, variant = "stacked", ...props }) {
   return (
     <div
       role="alert"
       css={{
         color: colors.danger,
-        ...errorMessageVariants[variant]
+        ...errorMessageVariants[variant],
       }}
       {...props}
     >
       <span>There was an error: </span>
       <pre
         css={[
-          {whiteSpace: 'break-spaces', margin: '0', marginBottom: -5},
+          { whiteSpace: "break-spaces", margin: "0", marginBottom: -5 },
           errorMessageVariants[variant],
         ]}
       >
         {error.message}
       </pre>
     </div>
-  )
+  );
 }
 
-function FullPageErrorFallback({error}) {
+function FullPageErrorFallback({ error }) {
   return (
     <div
       role="alert"
       css={{
         color: colors.danger,
-        height: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
+        height: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
       }}
     >
       <p>Uh oh... There's a problem. Try refreshing the app.</p>
       <pre>{error.message}</pre>
     </div>
-  )
+  );
 }
 
-function ErrorFallback({error}) {
+function ErrorFallback({ error }) {
   return (
     <ErrorMessage
       error={error}
       css={{
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
       }}
     />
-  )
+  );
 }
 
-export {
-  FullPageErrorFallback,
-  ErrorFallback,
-  ErrorMessage,
-}
+export { FullPageErrorFallback, ErrorFallback, ErrorMessage };
