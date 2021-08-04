@@ -3,7 +3,7 @@ import { ClickableTile } from "carbon-components-react";
 import moment from "moment";
 import { ErrorBoundary } from "react-error-boundary";
 import { useHistory } from "react-router-dom";
-import { ErrorFallback } from "../../components/lib";
+import { ErrorFallback } from "../lib";
 import { ArticleImage } from "./ArticleImage";
 
 function ArticleCard({

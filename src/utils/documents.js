@@ -1,21 +1,5 @@
-import { useQuery, queryCache } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { searchDocument, getContentById } from "./api";
-
-const getDocumentSearchConfig = ({ text, type }) => ({
-  queryKey: ["contentSearch", { text, type }],
-  queryFn: () =>
-    searchDocument({
-      text: encodeURIComponent(text),
-      type: encodeURIComponent(type),
-    }).then((data) => (data?.documents ? data?.documents : [])),
-  config: {
-    onSuccess(documents) {
-      for (const document of documents) {
-        setQueryDataForDocument(document.document);
-      }
-    },
-  },
-});
 
 function useDocument(documentId, config = {}) {
   const result = useQuery({
@@ -27,21 +11,25 @@ function useDocument(documentId, config = {}) {
 }
 
 function useDocumentSearch({ text, type }) {
-  const result = useQuery(getDocumentSearchConfig({ text, type }));
+  const queryClient = useQueryClient();
+  const result = useQuery({
+    queryKey: ["contentSearch", { text, type }],
+    queryFn: () =>
+      searchDocument({
+        text: encodeURIComponent(text),
+        type: encodeURIComponent(type),
+      }).then((data) => (data?.documents ? data?.documents : [])),
+    onSuccess(documents) {
+      for (const document of documents) {
+        setQueryDataForDocument(document.document, queryClient);
+      }
+    },
+  });
   return { ...result, documents: result.data };
 }
 
-const documentQueryConfig = {
-  staleTime: 1000 * 60 * 60,
-  cacheTime: 1000 * 60 * 60,
-};
-
-function setQueryDataForDocument(document) {
-  queryCache.setQueryData(
-    ["document", { id: document.id }],
-    document,
-    documentQueryConfig
-  );
+function setQueryDataForDocument(document, queryClient) {
+  queryClient.setQueryData(["document", { id: document.id }], document);
 }
 
 export { useDocumentSearch, useDocument };

@@ -1,30 +1,42 @@
 /** @jsxImportSource @emotion/react */
 import * as colors from "../styles/colors";
+import { Button } from "carbon-components-react";
 
-const errorMessageVariants = {
-  stacked: { display: "block" },
-  inline: { display: "inline-block" },
-};
-
-function ErrorMessage({ error, variant = "stacked", ...props }) {
+function ErrorMessage({ error, retry, ...props }) {
   return (
     <div
       role="alert"
       css={{
         color: colors.danger,
-        ...errorMessageVariants[variant],
+        display: "flex",
+        justifyContent: "center",
       }}
       {...props}
     >
-      <span>There was an error: </span>
-      <pre
-        css={[
-          { whiteSpace: "break-spaces", margin: "0", marginBottom: -5 },
-          errorMessageVariants[variant],
-        ]}
+      <div
+        css={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
       >
-        {error.message}
-      </pre>
+        <div>
+          <span>There was an error: </span>
+          <pre css={{ whiteSpace: "break-spaces", margin: "0" }}>
+            {error.message}
+          </pre>
+        </div>
+        {retry && typeof retry === "function" && (
+          <Button
+            css={{ marginTop: "20px" }}
+            onClick={() => retry()}
+            kind="danger--tertiary"
+          >
+            Retry
+          </Button>
+        )}
+      </div>
     </div>
   );
 }

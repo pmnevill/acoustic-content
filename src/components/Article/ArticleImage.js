@@ -7,7 +7,7 @@ import { ErrorFallback } from "../lib";
 
 function ArticleImage({
   rendition,
-  crop = 120,
+  crop = 100,
   css,
   documentLoading = false,
   ...props
@@ -51,8 +51,9 @@ function ArticleImage({
               position: "absolute",
               left: "50%",
               top: "50%",
-              height: "auto",
+              height: `${crop}%`,
               width: `${crop}%`,
+              objectFit: "cover",
               webkitTransform: "translate(-50%,-50%)",
               msTransform: "translate(-50%,-50%)",
               transform: "translate(-50%,-50%)",

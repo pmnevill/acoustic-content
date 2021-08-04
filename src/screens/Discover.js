@@ -13,10 +13,11 @@ import {
   Loading,
 } from "carbon-components-react";
 import { useDocumentSearch } from "../utils/documents";
-import { ArticleCard } from "../components/ArticleCard/ArticleCard";
+import { ArticleCard } from "../components/Article/ArticleCard";
 import { ErrorBoundary } from "react-error-boundary";
-import { ErrorFallback } from "../components/lib";
-import debounceFn from "debounce-fn";
+import { ErrorFallback, ErrorMessage } from "../components/lib";
+// import debounceFn from "debounce-fn";
+import _ from 'lodash';
 
 function Discover() {
   const initialQuery = {
@@ -26,10 +27,10 @@ function Discover() {
   const [text, setText] = React.useState("");
   const [type, setType] = React.useState("Design article");
   const [query, setQuery] = React.useState({ text, type });
-  const { documents, isLoading, isSuccess } = useDocumentSearch(query);
+  const { documents, isLoading, isSuccess, isError, error, refetch } = useDocumentSearch(query);
 
   const debouncedSearch = React.useMemo(
-    () => debounceFn(setQuery, { wait: 500 }),
+    () => _.debounce(setQuery, 500),
     [setQuery]
   );
 
@@ -67,7 +68,7 @@ function Discover() {
               defaultValue={query.type}
               size="xl"
               css={{
-                width: "200px",
+                width: "180px",
                 borderRightColor: "rgba(0, 0, 0, 0.1)",
                 borderRightStyle: "solid",
                 borderRightWidth: "1px",
@@ -130,7 +131,7 @@ function Discover() {
           ) : (
             <p>No Documents found</p>
           )
-        ) : null}
+        ) : isError && <ErrorMessage error={error} retry={refetch} />}
       </div>
     </ErrorBoundary>
   );

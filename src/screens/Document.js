@@ -1,19 +1,19 @@
 /** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react";
 import * as React from "react";
 import { useParams, useHistory } from "react-router-dom";
 import { useDocument } from "../utils/documents";
 import { ErrorBoundary } from "react-error-boundary";
-import { ErrorFallback } from "../components/lib";
-import { ArticleImage } from "../components/ArticleCard/ArticleImage";
-import moment from "moment";
-import { FaCalendar } from "react-icons/fa";
-import { SkeletonText } from "carbon-components-react";
+import { ErrorFallback, ErrorMessage } from "../components/lib";
+import { ArticleImage } from "../components/Article/ArticleImage";
+import { Article } from "../components/Article/Article";
+import { ArticleHeader } from "../components/Article/ArticleHeader";
+import { AuthorBio } from "../components/Article/AuthorBio";
+import { ArticleBody } from "../components/Article/ArticleBody";
 
 function DocumentScreen() {
   const { documentId } = useParams();
   const history = useHistory();
-  const { document, isLoading, error } = useDocument(documentId);
+  const { document, isLoading, error, refetch } = useDocument(documentId);
 
   const leadImage = document?.elements?.mainImage?.value?.leadImage || null;
   const headingValue = document?.elements?.heading?.value || null;
@@ -30,8 +30,6 @@ function DocumentScreen() {
     "authorBio"
   );
 
-  const formattedDate = moment(dateValue).format("MMMM Do YYYY");
-
   React.useEffect(() => {
     if (error) {
       history.push("/");
@@ -40,74 +38,14 @@ function DocumentScreen() {
 
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
-      <div
-        css={{
-          display: "flex",
-          flexDirection: "column",
-        }}
-      >
-        <div
-          css={{
-            margin: "30px",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          {isLoading ? (
-            <SkeletonText
-              heading={true}
-              css={{
-                height: "50px",
-                width: "50% !important",
-              }}
-            />
-          ) : (
-            <h1>{headingValue}</h1>
-          )}
-          {isLoading ? (
-            <SkeletonText
-              css={{
-                height: "36px",
-                width: "30% !important",
-              }}
-            />
-          ) : (
-            <h3
-              css={{
-                fontStyle: "italic",
-                fontWeight: "lighter",
-              }}
-            >
-              {authorValue}
-            </h3>
-          )}
-          <div
-            css={{
-              padding: "20px",
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
-              width: "30% !important",
-            }}
-          >
-            {isLoading ? (
-              <>
-                <SkeletonText />
-              </>
-            ) : (
-              <>
-                <FaCalendar css={{ marginRight: "10px" }} />
-                <span css={{ fontStyle: "italic" }}>
-                  Published: {formattedDate}
-                </span>
-              </>
-            )}
-          </div>
-        </div>
+      {!error ? <Article>
+        <ArticleHeader
+          heading={headingValue}
+          author={authorValue}
+          date={dateValue}
+          isLoading={isLoading}
+        />
         <ArticleImage
-          crop="100"
           rendition={leadImage}
           css={{
             height: "50vh",
@@ -115,87 +53,14 @@ function DocumentScreen() {
           }}
           documentLoading={isLoading}
         />
-        <div
-          css={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            marginBottom: "50px",
-            justifyContent: "center",
-          }}
-        >
-          {authorBioValue ? (
-            <div
-              css={{
-                margin: "10px",
-              }}
-            >
-              <ArticleImage
-                css={{
-                  borderRadius: "50px",
-                  width: "80px",
-                  height: "80px",
-                }}
-                crop="100"
-                rendition={
-                  authorBioData?.elements?.profilePicture?.renditions?.closeUp
-                }
-                documentLoading={isLoading || authorBioIsLoading}
-              />
-            </div>
-          ) : null}
-          <div css={{ maxWidth: "500px" }}>
-            <h4>{authorValue}</h4>
-            <div
-              css={css`
-                p {
-                  font-style: italic;
-                  font-size: 12px;
-                }
-              `}
-              dangerouslySetInnerHTML={{
-                __html: authorBioData?.elements?.shortBio?.value,
-              }}
-            ></div>
-          </div>
-        </div>
-        <article
-          css={{
-            marginBottom: "200px",
-            maxWidth: "1000px",
-            margin: "auto",
-          }}
-        >
-          {body?.values ? (
-            body?.values.map((value, index) => (
-              <div
-                css={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  p: {
-                    textIndent: "30px",
-                  },
-                }}
-                key={index}
-              >
-                <div dangerouslySetInnerHTML={{ __html: value }}></div>
-                <div
-                  css={{
-                    width: "80%",
-                    margin: "50px",
-                    height: "10px",
-                    backgroundColor: "rgba(0,0,0,0.05)",
-                    borderRadius: "5px",
-                  }}
-                ></div>
-              </div>
-            ))
-          ) : (
-            <p>Missing Content</p>
-          )}
-        </article>
-      </div>
+        <AuthorBio
+          author={authorValue}
+          bio={authorBioData?.elements?.shortBio?.value}
+          image={authorBioData?.elements?.profilePicture?.renditions?.closeUp}
+          isLoading={isLoading || authorBioIsLoading}
+        />
+        <ArticleBody body={body} isLoading={isLoading} />
+      </Article> : <ErrorMessage error={error} retry={refetch} />}
     </ErrorBoundary>
   );
 }
